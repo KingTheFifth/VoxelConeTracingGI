@@ -80,7 +80,7 @@ ComponentPtr<Transform> ECSUtil::loadMeshEntities(Model* model, std::shared_ptr<
             material->setFloat("u_hasOpacityMap", materialDesc.opacityTextures.size() > 0);
             material->setFloat("u_shininess", materialDesc.shininess);
             material->setColor("u_color", glm::vec4(materialDesc.diffuseColor, 1.0f));
-            material->setColor("u_emissionColor", glm::vec3(0.0f));
+            material->setColor("u_emissionColor", materialDesc.emissiveColor);
             material->setColor("u_specularColor", materialDesc.specularColor);
 
             setTextures("u_diffuseTexture", baseTexturePath, materialDesc.diffuseTextures, material.get(), Texture2DSettings::S_T_REPEAT_ANISOTROPIC);
