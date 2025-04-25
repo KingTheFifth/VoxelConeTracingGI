@@ -246,17 +246,35 @@ void VoxelConeTracingDemo::createDemoScene()
     MainCamera = camComponent;
 
     camComponent->setPerspective(45.0f, float(Screen::getWidth()), float(Screen::getHeight()), 0.3f, 30.0f);
-    glm::vec3 cameraPositionOffset(8.625f, 6.593f, -0.456f);
+    //glm::vec3 cameraPositionOffset(8.625f, 6.593f, -0.456f);
+    glm::vec3 cameraPositionOffset(1.0f, 2.0f, 0.0f);
     camTransform->setPosition(m_scenePosition + cameraPositionOffset);
-    camTransform->setEulerAngles(glm::vec3(math::toRadians(10.236f), math::toRadians(-66.0f), 0.0f));
+    //camTransform->setEulerAngles(glm::vec3(math::toRadians(10.236f), math::toRadians(-66.0f), 0.0f));
+    camTransform->setEulerAngles(glm::vec3(math::toRadians(0.0f), math::toRadians(90.0f), 0.0f));
 
     m_engine->registerCamera(camComponent);
 
     auto shader = ResourceManager::getShader("shaders/forwardShadingPass.vert", "shaders/forwardShadingPass.frag", { "in_pos", "in_normal", "in_tangent", "in_bitangent", "in_uv" });
-    auto sceneRootEntity = ECSUtil::loadMeshEntities("meshes/sponza_obj/sponza.obj", shader, "textures/sponza_textures/", glm::vec3(0.01f), true);
+    auto sceneRootEntity = ECSUtil::loadMeshEntities("meshes/sponza_obj/sponza.obj", shader, "textures/sponza_textures/", glm::vec3(0.01f), false);
 
     if (sceneRootEntity)
         sceneRootEntity->setPosition(glm::vec3(m_scenePosition));
+    
+    glm::vec3 default_scale = { 1.0f, 1.0f, 1.0f };
+    std::vector<std::pair<glm::vec3, glm::vec3>> cubes = {
+        {{-11.0f, 0.5f, 0.1f}, default_scale},
+        {{11.2f, 1.0f, -4.04f}, {0.7, 0.45, 0.7}},
+        {{-4.5f, 1.5f, 2.25f}, {0.7f, 0.5f, 0.7f}},
+        {{3.0f, 1.0f, 0.0f}, 0.5f * default_scale},
+        {{7.5f, 5.6f, -3.4f}, default_scale},
+        {{11.0f, 5.0f, 4.0f}, {1.0f, 0.45f, 1.0f}},
+        {{-8.0f, 5.0f, 4.0f}, default_scale}
+    };
+    for (auto& cube : cubes) {
+        auto c = ECSUtil::loadMeshEntities("meshes/cube.obj", shader, "textures/sponza_textures/");
+        c->setPosition(cube.first);
+        c->setLocalScale(cube.second);
+    }
 
     m_directionalLight = ECS::createEntity("Directional Light");
     m_directionalLight.addComponent<DirectionalLight>();
